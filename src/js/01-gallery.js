@@ -1,59 +1,26 @@
 // Add imports above this line
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 import { galleryItems } from './gallery-items';
+
 // Change code below this line
 
 console.log(galleryItems);
-const gallery = document.querySelector('.gallery');
-const cardsMarkup = createGalleryCardsMarkup(galleryItems);
-gallery.insertAdjacentHTML('beforeend', cardsMarkup)
 
+const galleryContainer = document.querySelector('.gallery');
 
-function createGalleryCardsMarkup (galleryItems ){
-    return galleryItems
-    .map(({ preview, original, description }) => {
-    return `
-        <li class="gallery__item">
-        <a class="gallery__link" href="${original}">
-        <img
-          class="gallery__image"
-          src="${preview}"
-          data-source="${original}"
-          alt="${description}"/>
-      </a>
-    </li>`;
-})
-.join('');
-}
-
-gallery.addEventListener('click', evt => {
-evt.preventDefault();
-if (evt.target.nodeName !== 'IMG') {
-   return 
-}
-const instance = basicLightbox.create(`
-<div class="modal">
-<img src="${evt.target.dataset.source}" 
-width="1100 height="800" />
-</div>
-`,
-
-{
-    onShow: instance => {
-      instance.element().querySelector('img').onclick = instance.close;
+const createitem = galleryItems
+  .map(({ preview, original, description }) =>
       
-      window.addEventListener('keydown', eventHandler);
-    },
-    onClose: instance => {
-      window.removeEventListener('keydown', eventHandler);
-    },
-  },
-);
-      function eventHandler(event) {
-        if (event.key === 'Escape') {
-          instance.close();
-          return;
-        }
-      }
+    `<a class="gallery__item" href="${original}"
+      style=' height: 240px'>
+      <img class="gallery__image" src="${preview}" alt="${description}" />
+    </a>`,
+  )
+    .join('');
+galleryContainer.insertAdjacentHTML('beforeend', createitem);
 
-instance.show();
-})
+const lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: `250`,
+});
